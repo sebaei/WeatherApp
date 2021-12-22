@@ -1,36 +1,40 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .app {
-  width: 488px;
-  height: 424px;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 90%;
+  height: 80%;
   top: 20%;
   left: 20%;
   color: white;
-  padding: 20px;
+  padding: 30px;
   background-image: url("../assets/dominik-lange-ZUvF7qEIcVI-unsplash.jpg");
   background-size: cover;
-  /* filter: brightness(60%); */
 }
 
 .header {
-  width: 100%;
+  display: flex;
+  margin-bottom: 60px;
 }
 
-.switch-btn {
-  background-color: transparent;
-  border-color: white;
-  color: white;
-  float: right;
+.btn-container {
+  margin-left: auto;
 }
-.switch-btn:hover {
-  color: rgba (0, 55, 55, 0.5);
+
+.btntemp {
+  border: 1px;
+  background-color: transparent;
+  border-color: transparent;
+  color: white;
+}
+
+.btntemp:focus {
+  color: yellow;
 }
 
 .search-bar {
@@ -39,7 +43,12 @@ body {
   border-color: transparent;
 }
 
+.location-box {
+  width: 60%;
+}
 .location-box .location {
+  justify-content: center;
+  align-content: center;
   font-size: 24px;
   font-weight: 400;
   text-align: left;
@@ -57,6 +66,9 @@ body {
   text-align: left;
 }
 
+.weather-box {
+  margin-left: auto;
+}
 .weather-box .temp {
   text-align: right;
   font-size: 60px;
@@ -65,4 +77,12 @@ body {
 .weather-box .maxmin {
   text-align: right;
   font-size: 26px;
+}
+
+.summary {
+  font-size: 14px;
+}
+.loc-weather {
+  display: flex;
+  margin-bottom: 30px;
 }

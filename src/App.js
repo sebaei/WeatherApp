@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "weather-icons/css/weather-icons.css";
 
-// const api = {
-//   key: "1219efb5466d6672691e5aeb111c77e3",
-//   base: "https://api.openweathermap.org/data/2.5/",
-
 function App() {
-  const [celsius, setCelsius] = useState(true);
-  const [fahrenheit, setFahrenheit] = useState(false);
-  const [query, setQuery] = useState("");
+  const [celsius, setCelsius] = useState(false);
+  const [fahrenheit, setFahrenheit] = useState(true);
+  const [maxtemp, setMaxtemp] = useState(null);
   const [weather, setWeather] = useState("");
-  const [weatherIns, setWeatherIns] = useState("");
+  const [hourly, setHourly] = useState(true);
+  const [weekly, setWeekly] = useState(false);
 
   const switchtoC = () => {
     setFahrenheit(false);
@@ -21,6 +19,23 @@ function App() {
     setCelsius(false);
     setFahrenheit(true);
   };
+
+  const sethours = () => {
+    setWeekly(false);
+    setHourly(true);
+  };
+  const setweeks = () => {
+    setHourly(false);
+    setWeekly(true);
+  };
+
+  function TempmaxList(props) {
+    const listItems = props.weather.daily.data.map(function (item) {
+      return <li key={item["time"]}>{item["temperatureMax"]}</li>;
+    });
+    return <ul>{listItems}</ul>;
+  }
+
   //Getting Geolocation of User
   const componentDidMount = () => {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -28,21 +43,7 @@ function App() {
       console.log("Longitude is :", position.coords.longitude);
     });
   };
-  const search = (evt) => {
-    if (evt.key === "Enter") {
-      fetch(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=30.0719&lon=31.4774&units=metric&appid=1219efb5466d6672691e5aeb111c77e3`
 
-        //"https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/30.0074,31.4913" Error CORS
-      )
-        .then((res) => res.json())
-        .then((result) => {
-          //setWeather(result);
-          setQuery("");
-          //console.log(result);
-        });
-    }
-  };
   const dateBuilder = (d) => {
     let months = [
       "January",
@@ -75,70 +76,89 @@ function App() {
     return `${day} ${date} ${month} ${year}`;
   };
 
-  const getWeather = async () => {
-    const fetchData = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=30.0719&lon=31.477&units=metric&appid=1219efb5466d6672691e5aeb111c77e3`
-    );
-    const responseweather = await fetchData.json();
-    setWeather(responseweather);
-    console.log(responseweather);
-  };
-  const getWeatherInstances = async () => {
-    const fetchData = await fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=30.0719&lon=31.4774&units=metric&appid=1219efb5466d6672691e5aeb111c77e3`
-    );
-    const responseinst = await fetchData.json();
-    setWeatherIns(responseinst);
-    console.log(responseinst);
-  };
-
   useEffect(() => {
-    getWeather();
-    getWeatherInstances();
-    //componentDidMount();
+    const url =
+      "https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/30.0719,31.477";
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        setWeather(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetchData();
   }, []);
 
   return (
     <div className="app">
       <main>
-        <header className="header">
+        <div className="header">
           <h2>INSTAWEATHER</h2>
-          <button className="switch-btn" onClick={() => switchtoC()}>
-            C
-          </button>
-          <button className="switch-btn" onClick={() => switchtoF()}>
-            F
-          </button>
-        </header>
-        <div>
-          <input
-            type="text"
-            className="search-bar"
-            placeholder="Search..."
-            onChange={(e) => setQuery(e.target.value)}
-            value={query}
-            onKeyPress={search}
-          />
+          <div className="btn-container">
+            <button className="btntemp" onClick={() => switchtoC()}>
+              C
+            </button>
+            <button className="btntemp" onClick={() => switchtoF()}>
+              F
+            </button>
+          </div>
         </div>
-        {typeof weather.main != "undefined" ? (
+
+        {weather ? (
           <div>
-            <div className="location-box">
-              <div className="location">
-                {weather.name}, {weather.sys.country}
+            <div className="loc-weather">
+              <div className="location-box">
+                <div className="location">{weather.timezone}</div>
+                <div className="date">{dateBuilder(new Date())}</div>
+                {/* Get Icon */}
+                <div className="weather">{weather.currently.summary}</div>
               </div>
-              <div className="date">{dateBuilder(new Date())}</div>
-              <div className="weather">{weather.weather[0].main}</div>
+              <div className="weather-box">
+                <div className="temp">
+                  {fahrenheit ? (
+                    <div> {Math.round(weather.currently.temperature)}° </div>
+                  ) : (
+                    <div>
+                      {" "}
+                      {Math.round(
+                        (Math.round(weather.currently.temperature - 32) * 5) / 9
+                      )}{" "}
+                      °{" "}
+                    </div>
+                  )}
+                </div>
+                <div className="maxmin">
+                  {fahrenheit ? (
+                    <div>
+                      {" "}
+                      {Math.round(weather.daily.data[0].temperatureMax)}° /
+                      {Math.round(weather.daily.data[0].temperatureMin)}°{" "}
+                    </div>
+                  ) : (
+                    <div>
+                      {Math.round(weather.daily.data[0].temperatureMax)}° /
+                      {Math.round(weather.daily.data[0].temperatureMin)}°{" "}
+                    </div>
+                  )}
+                </div>
+                <div className="summary"> {weather.daily.data[0].summary}</div>
+              </div>
             </div>
-            <div className="weather-box">
-              <div className="temp">{Math.round(weather.main.temp)}°</div>
-              <div className="maxmin">
-                {Math.round(weather.main.temp_max)}°/
-                {Math.round(weather.main.temp_min)}°
-              </div>
+            <div className="intervals">
+              <button className="interval-btn" onClick={() => sethours()}>
+                Hourly
+              </button>
+              <button className="interval-btn" onClick={() => setweeks()}>
+                Weekly
+              </button>
+              <TempmaxList weather={weather} />
             </div>
           </div>
         ) : (
-          ""
+          "Weather"
         )}
       </main>
     </div>
