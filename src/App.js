@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "weather-icons/css/weather-icons.css";
 
@@ -8,8 +8,8 @@ function App() {
   const [fahrenheit, setFahrenheit] = useState(true);
   const [maxtemp, setMaxtemp] = useState(null);
   const [weather, setWeather] = useState("");
-  const [hourly, setHourly] = useState(true);
-  const [weekly, setWeekly] = useState(false);
+  const [hourly, setHourly] = useState(false);
+  const [daily, setDaily] = useState(true);
 
   const switchtoC = () => {
     setFahrenheit(false);
@@ -20,20 +20,28 @@ function App() {
     setFahrenheit(true);
   };
 
-  const sethours = () => {
-    setWeekly(false);
+  const showhourly = () => {
+    setDaily(false);
     setHourly(true);
   };
-  const setweeks = () => {
+  const showdaily = () => {
     setHourly(false);
-    setWeekly(true);
+    setDaily(true);
   };
 
-  function TempmaxList(props) {
-    const listItems = props.weather.daily.data.map(function (item) {
-      return <li key={item["time"]}>{item["temperatureMax"]}</li>;
+  function HourlyList(props) {
+    const hlistItems = props.weather.hourly.data.map(function (item) {
+      return <li key={item["time"]}>{Math.round(item["temperature"])}°</li>;
     });
-    return <ul>{listItems}</ul>;
+    let hlistslice = hlistItems.slice(1, 25);
+    return <ul>{hlistslice}</ul>;
+  }
+
+  function DailyList(props) {
+    const dlistItems = props.weather.daily.data.map(function (item) {
+      return <li key={item["time"]}>{Math.round(item["temperatureMax"])}°</li>;
+    });
+    return <ul>{dlistItems}</ul>;
   }
 
   //Getting Geolocation of User
@@ -85,6 +93,7 @@ function App() {
         const response = await fetch(url);
         const json = await response.json();
         setWeather(json);
+        console.log(json);
       } catch (error) {
         console.log("error", error);
       }
@@ -122,25 +131,33 @@ function App() {
                     <div> {Math.round(weather.currently.temperature)}° </div>
                   ) : (
                     <div>
-                      {" "}
                       {Math.round(
                         (Math.round(weather.currently.temperature - 32) * 5) / 9
-                      )}{" "}
-                      °{" "}
+                      )}
+                      °
                     </div>
                   )}
                 </div>
                 <div className="maxmin">
                   {fahrenheit ? (
                     <div>
-                      {" "}
                       {Math.round(weather.daily.data[0].temperatureMax)}° /
                       {Math.round(weather.daily.data[0].temperatureMin)}°{" "}
                     </div>
                   ) : (
                     <div>
-                      {Math.round(weather.daily.data[0].temperatureMax)}° /
-                      {Math.round(weather.daily.data[0].temperatureMin)}°{" "}
+                      {Math.round(
+                        (Math.round(weather.daily.data[0].temperatureMax - 32) *
+                          5) /
+                          9
+                      )}
+                      ° /
+                      {Math.round(
+                        (Math.round(weather.daily.data[0].temperatureMin - 32) *
+                          5) /
+                          9
+                      )}
+                      °{" "}
                     </div>
                   )}
                 </div>
@@ -148,13 +165,16 @@ function App() {
               </div>
             </div>
             <div className="intervals">
-              <button className="interval-btn" onClick={() => sethours()}>
+              <button className="interval-btn" onClick={() => showhourly()}>
                 Hourly
               </button>
-              <button className="interval-btn" onClick={() => setweeks()}>
-                Weekly
+              <button className="interval-btn" onClick={() => showdaily()}>
+                Daily
               </button>
-              <TempmaxList weather={weather} />
+              <div className="slider">
+                {hourly && <HourlyList weather={weather} />}
+                {daily && <DailyList weather={weather} />}
+              </div>
             </div>
           </div>
         ) : (
