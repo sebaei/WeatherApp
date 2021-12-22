@@ -45,10 +45,12 @@ function App() {
   }
 
   //Getting Geolocation of User
-  const componentDidMount = () => {
+  const getLocation = () => {
     navigator.geolocation.getCurrentPosition(function (position) {
       console.log("Latitude is :", position.coords.latitude);
+      var lat = position.coords.latitude;
       console.log("Longitude is :", position.coords.longitude);
+      var lon = position.coords.longitude;
     });
   };
 
@@ -85,8 +87,7 @@ function App() {
   };
 
   useEffect(() => {
-    const url =
-      "https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/30.0719,31.477";
+    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${lat},${lon}`;
 
     const fetchData = async () => {
       try {
@@ -99,6 +100,7 @@ function App() {
       }
     };
     fetchData();
+    getLocation();
   }, []);
 
   return (
