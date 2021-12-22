@@ -31,7 +31,20 @@ function App() {
 
   function HourlyList(props) {
     const hlistItems = props.weather.hourly.data.map(function (item) {
-      return <li key={item["time"]}>{Math.round(item["temperature"])}°</li>;
+      return (
+        <li className="forecast-item" key={item["time"]}>
+          <div>
+            {item["icon"]}
+            {fahrenheit ? (
+              <div>{Math.round(item["temperature"])}° </div>
+            ) : (
+              <div>
+                {Math.round((Math.round(item["temperature"] - 32) * 5) / 9)}°{" "}
+              </div>
+            )}
+          </div>
+        </li>
+      );
     });
     let hlistslice = hlistItems.slice(1, 25);
     return <ul>{hlistslice}</ul>;
@@ -39,7 +52,20 @@ function App() {
 
   function DailyList(props) {
     const dlistItems = props.weather.daily.data.map(function (item) {
-      return <li key={item["time"]}>{Math.round(item["temperatureMax"])}°</li>;
+      return (
+        <li className="forecast-item" key={item["time"]}>
+          <div>
+            {item["icon"]}
+            {fahrenheit ? (
+              <div>{Math.round(item["temperatureMax"])}°</div>
+            ) : (
+              <div>
+                {Math.round((Math.round(item["temperatureMax"] - 32) * 5) / 9)}°{" "}
+              </div>
+            )}
+          </div>
+        </li>
+      );
     });
     return <ul>{dlistItems}</ul>;
   }
@@ -87,7 +113,7 @@ function App() {
   };
 
   useEffect(() => {
-    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${lat},${lon}`;
+    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/30.0719,31.477`;
 
     const fetchData = async () => {
       try {
@@ -125,6 +151,7 @@ function App() {
                 <div className="location">{weather.timezone}</div>
                 <div className="date">{dateBuilder(new Date())}</div>
                 {/* Get Icon */}
+                <div>{weather.currently.icon}</div>
                 <div className="weather">{weather.currently.summary}</div>
               </div>
               <div className="weather-box">
@@ -168,19 +195,19 @@ function App() {
             </div>
             <div className="intervals">
               <button className="interval-btn" onClick={() => showhourly()}>
-                Hourly
+                Hourly {hourly && <div className="underline"></div>}
               </button>
-              <button className="interval-btn" onClick={() => showdaily()}>
-                Daily
+              <button className="interval-btnd" onClick={() => showdaily()}>
+                Daily {daily && <div className="underline"></div>}
               </button>
-              <div className="slider">
+              <div className="forecast">
                 {hourly && <HourlyList weather={weather} />}
                 {daily && <DailyList weather={weather} />}
               </div>
             </div>
           </div>
         ) : (
-          "Weather"
+          ""
         )}
       </main>
     </div>
