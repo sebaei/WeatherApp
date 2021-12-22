@@ -1,13 +1,68 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.app {
+  width: 488px;
+  height: 424px;
+  top: 20%;
+  left: 20%;
+  color: white;
+  padding: 20px;
+  background-image: url("../assets/dominik-lange-ZUvF7qEIcVI-unsplash.jpg");
+  background-size: cover;
+  /* filter: brightness(60%); */
+}
+
+.header {
+  width: 100%;
+}
+
+.switch-btn {
+  background-color: transparent;
+  border-color: white;
+  color: white;
+  float: right;
+}
+.switch-btn:hover {
+  color: rgba (0, 55, 55, 0.5);
+}
+
+.search-bar {
+  width: 50%;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.location-box .location {
+  font-size: 24px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.location-box .date {
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.location-box .weather {
+  font-size: 18px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.weather-box .temp {
+  text-align: right;
+  font-size: 60px;
+}
+
+.weather-box .maxmin {
+  text-align: right;
+  font-size: 26px;
 }
