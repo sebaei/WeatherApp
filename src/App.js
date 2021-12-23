@@ -1,40 +1,44 @@
 import React, { useState, useEffect } from "react";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "weather-icons/css/weather-icons.css";
 
 function App() {
+  //States used
   const [celsius, setCelsius] = useState(false);
   const [fahrenheit, setFahrenheit] = useState(true);
-  // const [maxtemp, setMaxtemp] = useState(null);
   const [weather, setWeather] = useState("");
   const [hourly, setHourly] = useState(true);
   const [daily, setDaily] = useState(false);
 
+  //Switch to Celsius when button is pressed
   const switchtoC = () => {
     setFahrenheit(false);
     setCelsius(true);
   };
+  //Switch to Fahrenheit when button is pressed
   const switchtoF = () => {
     setCelsius(false);
     setFahrenheit(true);
   };
-
+  //Show weather for next 24 hours when pressed
   const showhourly = () => {
     setDaily(false);
     setHourly(true);
   };
+  //Show weather for next 8 days when pressed
   const showdaily = () => {
     setHourly(false);
     setDaily(true);
   };
-
+  //To return temperature of next 24 hours and related icon
   function HourlyList(props) {
     const hlistItems = props.weather.hourly.data.map(function (item) {
+      var dateunix = new Date(item["time"] * 1000);
       return (
         <li className="forecast-item" key={item["time"]}>
           <div>
             {" "}
+            <div>{dateunix.getHours()}:00</div>
             <div>
               {item["icon"] === "clear-day" && (
                 <i className="icon" class="wi wi-day-sunny"></i>
@@ -66,31 +70,37 @@ function App() {
         </li>
       );
     });
-    let hlistslice = hlistItems.slice(1, 25);
+    let hlistslice = hlistItems.slice(0, 24); //Get only first 24 hours not all 48 hours
     return <ul>{hlistslice}</ul>;
   }
-
+  //To return temperature of next 7 days and related icon
   function DailyList(props) {
     const dlistItems = props.weather.daily.data.map(function (item) {
+      var dateunix2 = new Date(item["time"] * 1000);
       return (
         <li className="forecast-item" key={item["time"]}>
           <div>
-            {item["icon"] === "clear-day" && (
-              <i className="icon" class="wi wi-day-sunny"></i>
-            )}
-            {item["icon"] === "partly-cloudy-day" && (
-              <i className="icon" class="wi wi-day-cloudy"></i>
-            )}
-            {item["icon"] === "cloudy" && (
-              <i className="icon" class="wi wi-cloud"></i>
-            )}
-            {fahrenheit ? (
-              <div>{Math.round(item["temperatureMax"])}°</div>
-            ) : (
-              <div>
-                {Math.round((Math.round(item["temperatureMax"] - 32) * 5) / 9)}°{" "}
-              </div>
-            )}
+            <div>
+              {item["icon"] === "clear-day" && (
+                <i className="icon" class="wi wi-day-sunny"></i>
+              )}
+              {item["icon"] === "partly-cloudy-day" && (
+                <i className="icon" class="wi wi-day-cloudy"></i>
+              )}
+              {item["icon"] === "cloudy" && (
+                <i className="icon" class="wi wi-cloud"></i>
+              )}
+              {fahrenheit ? (
+                <div>{Math.round(item["temperatureMax"])}°</div>
+              ) : (
+                <div>
+                  {Math.round(
+                    (Math.round(item["temperatureMax"] - 32) * 5) / 9
+                  )}
+                  °{" "}
+                </div>
+              )}
+            </div>
           </div>
         </li>
       );
@@ -108,6 +118,25 @@ function App() {
     });
   };
 
+  const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/30.0719,31.4774`;
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      setWeather(json);
+      console.log(json);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    getLocation();
+  }, []);
+
+  // Gets current date
   const dateBuilder = (d) => {
     let months = [
       "January",
@@ -140,23 +169,6 @@ function App() {
     return `${day} ${date} ${month} ${year}`;
   };
 
-  useEffect(() => {
-    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/30.0719,31.477`;
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        const json = await response.json();
-        setWeather(json);
-        console.log(json);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchData();
-    getLocation();
-  }, []);
-
   return (
     <div className="app">
       <main>
@@ -178,7 +190,7 @@ function App() {
               <div className="location-box">
                 <div className="location">{weather.timezone}</div>
                 <div className="date">{dateBuilder(new Date())}</div>
-                {/* Get Icon */}
+                {/* Show Icon based on icon in response */}
                 <div className="main-icon">
                   {weather.currently.icon === "clear-day" && (
                     <i className="icon" class="wi wi-day-sunny"></i>
@@ -199,8 +211,11 @@ function App() {
                     <i className="icon" class="wi wi-night-cloudy"></i>
                   )}
                 </div>
+                {/* Display current weather summary */}
                 <div className="weather">{weather.currently.summary}</div>
               </div>
+
+              {/* If Fahrenheit is true then display temprature from response. If false then perform equation to turn to Celsius */}
               <div className="weather-box">
                 <div className="temp">
                   {fahrenheit ? (
@@ -214,6 +229,7 @@ function App() {
                     </div>
                   )}
                 </div>
+                {/* Get Maximum and Minimum temperature */}
                 <div className="maxmin">
                   {fahrenheit ? (
                     <div>
@@ -248,6 +264,7 @@ function App() {
                 Daily {daily && <div className="underline"></div>}
               </button>
               <div className="forecast">
+                {/* Checks which of Hourly & Daily is pressed to display the relative info */}
                 {hourly && <HourlyList weather={weather} />}
                 {daily && <DailyList weather={weather} />}
               </div>

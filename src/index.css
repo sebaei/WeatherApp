@@ -41,7 +41,7 @@
 }
 
 .location-box {
-  width: 60%;
+  width: 50%;
 }
 .location-box .location {
   justify-content: center;
@@ -64,6 +64,7 @@
 }
 
 .weather-box {
+  width: 50%;
   margin-left: auto;
 }
 .weather-box .temp {
@@ -77,6 +78,7 @@
 }
 
 .summary {
+  text-align: right;
   font-size: 14px;
 }
 .loc-weather {
@@ -87,7 +89,7 @@
 .interval-btn {
   width: 5rem;
   background-color: transparent;
-  color: lightgray;
+  color: rgb(230, 230, 230);
   border-color: transparent;
 }
 
