@@ -38,25 +38,25 @@ function App() {
         <li className="forecast-item" key={item["time"]}>
           <div>
             {" "}
-            <div>{dateunix.getHours()}:00</div>
+            <div className="time">{dateunix.getHours()}:00</div>
             <div>
               {item["icon"] === "clear-day" && (
-                <i className="icon" class="wi wi-day-sunny"></i>
+                <i className="icon-sun" class="wi wi-day-sunny"></i>
               )}
               {item["icon"] === "clear-night" && (
-                <i className="icon" class="wi wi-night-clear"></i>
+                <i className="icon-night" class="wi wi-night-clear"></i>
               )}
               {item["icon"] === "partly-cloudy-day" && (
-                <i className="icon" class="wi wi-day-cloudy"></i>
+                <i className="icon-sun" class="wi wi-day-cloudy"></i>
               )}
               {item["icon"] === "cloudy" && (
-                <i className="icon" class="wi wi-cloud"></i>
+                <i className="icon-sun" class="wi wi-cloud"></i>
               )}
               {item["icon"] === "partly-cloudy-night" && (
-                <i className="icon" class="wi wi-night-partly-cloudy"></i>
+                <i className="icon-night" class="wi wi-night-partly-cloudy"></i>
               )}
               {item["icon"] === "cloudy-night" && (
-                <i className="icon" class="wi wi-night-cloudy"></i>
+                <i className="icon-night" class="wi wi-night-cloudy"></i>
               )}
             </div>
             {fahrenheit ? (
@@ -82,13 +82,13 @@ function App() {
           <div>
             <div>
               {item["icon"] === "clear-day" && (
-                <i className="icon" class="wi wi-day-sunny"></i>
+                <i className="icon-sun" class="wi wi-day-sunny"></i>
               )}
               {item["icon"] === "partly-cloudy-day" && (
-                <i className="icon" class="wi wi-day-cloudy"></i>
+                <i className="icon-sun" class="wi wi-day-cloudy"></i>
               )}
               {item["icon"] === "cloudy" && (
-                <i className="icon" class="wi wi-cloud"></i>
+                <i className="icon-sun" class="wi wi-cloud"></i>
               )}
               {fahrenheit ? (
                 <div>{Math.round(item["temperatureMax"])}°</div>
@@ -193,22 +193,25 @@ function App() {
                 {/* Show Icon based on icon in response */}
                 <div className="main-icon">
                   {weather.currently.icon === "clear-day" && (
-                    <i className="icon" class="wi wi-day-sunny"></i>
+                    <i className="icon-sun" class="wi wi-day-sunny"></i>
                   )}
                   {weather.currently.icon === "clear-night" && (
-                    <i className="icon" class="wi wi-night-clear"></i>
+                    <i className="icon-night" class="wi wi-night-clear"></i>
                   )}
                   {weather.currently.icon === "partly-cloudy-day" && (
-                    <i className="icon" class="wi wi-day-cloudy"></i>
+                    <i className="icon-sun" class="wi wi-day-cloudy"></i>
                   )}
                   {weather.currently.icon === "cloudy" && (
-                    <i className="icon" class="wi wi-cloud"></i>
+                    <i className="icon-sun" class="wi wi-cloud"></i>
                   )}
                   {weather.currently.icon === "partly-cloudy-night" && (
-                    <i className="icon" class="wi wi-night-partly-cloudy"></i>
+                    <i
+                      className="icon-night"
+                      class="wi wi-night-partly-cloudy"
+                    ></i>
                   )}
                   {weather.currently.icon === "cloudy-night" && (
-                    <i className="icon" class="wi wi-night-cloudy"></i>
+                    <i className="icon-night" class="wi wi-night-cloudy"></i>
                   )}
                 </div>
                 {/* Display current weather summary */}
