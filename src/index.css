@@ -27,15 +27,17 @@
 }
 
 .btntemp {
-  border: 1px solid white;
+  width: 3rem;
+  margin-left: 0.1rem;
+  border: 1px solid transparent;
   background-color: transparent;
-  /* border-color: transparent; */
   color: white;
 }
 
 .btntemp:focus {
   background-color: rgba(255, 255, 255, 0.3);
-  border-width: 2px;
+  border-left-width: 2px;
+  border-left-color: white;
 }
 
 .location-box {
@@ -83,21 +85,24 @@
 }
 
 .interval-btn {
+  width: 5rem;
+  background-color: transparent;
+  color: lightgray;
+  border-color: transparent;
+}
+
+.interval-btn:focus {
+  width: 5rem;
   background-color: transparent;
   color: white;
   border-color: transparent;
 }
 
-.interval-btnd {
-  background-color: transparent;
-  color: white;
-  border-color: transparent;
-  margin-left: 4px;
-}
 .underline {
   width: 3rem;
   height: 0.25rem;
   margin-top: 0.5rem;
+  margin-left: 0.5rem;
   background: white;
 }
 .forecast {

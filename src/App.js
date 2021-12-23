@@ -186,8 +186,11 @@ function App() {
                   {weather.currently.icon === "clear-night" && (
                     <i className="icon" class="wi wi-night-clear"></i>
                   )}
-                  {weather.currently.icon === "cloudy" && (
+                  {weather.currently.icon === "partly-cloudy-day" && (
                     <i className="icon" class="wi wi-day-cloudy"></i>
+                  )}
+                  {weather.currently.icon === "cloudy" && (
+                    <i className="icon" class="wi wi-cloud"></i>
                   )}
                   {weather.currently.icon === "partly-cloudy-night" && (
                     <i className="icon" class="wi wi-night-partly-cloudy"></i>
@@ -241,7 +244,7 @@ function App() {
               <button className="interval-btn" onClick={() => showhourly()}>
                 Hourly {hourly && <div className="underline"></div>}
               </button>
-              <button className="interval-btnd" onClick={() => showdaily()}>
+              <button className="interval-btn" onClick={() => showdaily()}>
                 Daily {daily && <div className="underline"></div>}
               </button>
               <div className="forecast">
